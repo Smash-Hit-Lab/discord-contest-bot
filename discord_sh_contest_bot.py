@@ -88,7 +88,7 @@ class DiscordSHContestBot:
 
         elif args[0] == 'submissions':
             if len(self._submissions) == 0:
-                await msg.channel.send('**No submission were made so far**')
+                await msg.channel.send('**No submissions were made so far**')
                 return
             text = '\n'.join([f'- `@{i["author"].name}`:  <{i["link"]}>' for i in self._submissions])
             await msg.channel.send('**Submissions:**\n'+text)
