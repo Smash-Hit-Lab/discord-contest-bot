@@ -33,6 +33,7 @@ class DiscordSHContestBot:
         async def on_ready():
             self._log(f"Logged in as {self._client.user}")
             await self._read_submissions_file()
+            await self._client.change_presence(status=discord.Status.idle, activity=discord.Game("!help"))
 
         @self._client.event
         async def on_message(msg):
