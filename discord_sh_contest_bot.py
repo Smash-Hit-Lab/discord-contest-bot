@@ -92,9 +92,9 @@ class DiscordSHContestBot:
                     continue
                 del self._submissions[i]
                 self._write_submissions_file()
-                msg.channel.send('Your submission was removed successfully')
+                await msg.channel.send('Your submission was removed successfully')
                 return
-            msg.channel.send('You have not submitted anything')
+            await msg.channel.send('You have not submitted anything')
 
         elif args[0] == 'submissions':
             if len(self._submissions) == 0:
