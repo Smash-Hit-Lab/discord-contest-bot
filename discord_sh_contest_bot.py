@@ -81,10 +81,12 @@ class DiscordSHContestBot:
             if submission_link.startswith('<') and submission_link.endswith('>'):
                 submission_link = submission_link[1:-1]
             if (len(args) < 2) or (not _uri_validate(submission_link)):
-                await msg.channel.send(f'**Couldn\'t make a submission.**\nPlease, provide a link to your submission.\nExample: `{self.prefix}submit https://github.com/knot126/KSAM-Assets`')
+                await msg.channel.send('**Couldn\'t make a submission**\n'
+                                       'Please, provide a link to your submission\n'
+                                       f'Example: `{self.prefix}submit https://github.com/knot126/KSAM-Assets`')
                 return
             self._check_in_submission(msg.author, submission_link)
-            await msg.channel.send(f'Submitted <{submission_link}> successfully.')
+            await msg.channel.send(f'**Submitted <{submission_link}> successfully**')
 
         elif args[0] == 'unsubmit':
             for i in range(len(self._submissions)):
@@ -92,9 +94,9 @@ class DiscordSHContestBot:
                     continue
                 del self._submissions[i]
                 self._write_submissions_file()
-                await msg.channel.send('Your submission was removed successfully')
+                await msg.channel.send('**Your submission was removed successfully**')
                 return
-            await msg.channel.send('You have not submitted anything')
+            await msg.channel.send('**You have not submitted anything**')
 
         elif args[0] == 'submissions':
             if len(self._submissions) == 0:
@@ -104,9 +106,10 @@ class DiscordSHContestBot:
             await msg.channel.send('**Submissions:**\n'+text)
 
         elif args[0] == 'help':
-            await msg.channel.send(f'`{self.prefix}submit <link>` - make/remake a submission\n'
-                                   f'`{self.prefix}unsubmit` - remove your submission\n'
-                                   f'`{self.prefix}submissions` - view all submissions made so far')
+            await msg.channel.send('**Bot commands:**\n'
+                                   f'- `{self.prefix}submit <link>` - make/remake a submission\n'
+                                   f'- `{self.prefix}unsubmit` - remove your submission\n'
+                                   f'- `{self.prefix}submissions` - view all submissions made so far')
 
     def _log(self, *args):
         if callable(self.log_func):
