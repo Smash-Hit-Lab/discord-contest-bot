@@ -74,7 +74,7 @@ class DiscordSHContestBot:
 
     async def _process_command(self, msg, args):
         def _response(content):
-            msg.reply(content, mention_author=False)
+            await msg.reply(content, mention_author=False)
 
         if args[0] == 'ping':
             _response('pong')
