@@ -73,20 +73,23 @@ class DiscordSHContestBot:
         self._write_submissions_file()
 
     async def _process_command(self, msg, args):
+        def _response(content):
+            msg.reply(content, mention_author=False)
+
         if args[0] == 'ping':
-            await msg.reply('pong')
+            await _response('pong')
 
         elif args[0] == 'submit':
             submission_link = msg.content[len({self.prefix})+len(args[0]):].strip()
             if submission_link.startswith('<') and submission_link.endswith('>'):
                 submission_link = submission_link[1:-1]
             if (len(args) < 2) or (not _uri_validate(submission_link)):
-                await msg.reply('Couldn\'t make a submission\n'
+                await _response('Couldn\'t make a submission\n'
                                 'Please, provide a link to your submission\n'
                                 f'Example: `{self.prefix}submit https://github.com/knot126/KSAM-Assets`')
                 return
             self._check_in_submission(msg.author, submission_link)
-            await msg.reply(f'Submitted <{submission_link}> successfully')
+            await _response(f'Submitted <{submission_link}> successfully')
 
         elif args[0] == 'unsubmit':
             for i in range(len(self._submissions)):
@@ -94,19 +97,19 @@ class DiscordSHContestBot:
                     continue
                 del self._submissions[i]
                 self._write_submissions_file()
-                await msg.reply('Your submission was removed successfully')
+                await _response('Your submission was removed successfully')
                 return
-            await msg.reply('You have not submitted anything')
+            await _response('You have not submitted anything')
 
         elif args[0] == 'submissions':
             if len(self._submissions) == 0:
-                await msg.reply('No submissions were made so far')
+                await _response('No submissions were made so far')
                 return
             text = '\n'.join([ f'`@{i["author"].name}`:  <{i["link"]}>' for i in self._submissions ])
-            await msg.reply(text)
+            await _response(text)
 
         elif args[0] == 'help':
-            await msg.reply(f'`{self.prefix}submit <link>` - make/remake a submission\n'
+            await _response(f'`{self.prefix}submit <link>` - make/remake a submission\n'
                             f'`{self.prefix}unsubmit` - remove your submission\n'
                             f'`{self.prefix}submissions` - view all submissions made so far')
 
