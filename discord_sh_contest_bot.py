@@ -77,7 +77,7 @@ class DiscordSHContestBot:
             await msg.channel.send('pong')
 
         elif args[0] == 'submit':
-            submission_link = " ".join(args[1:])
+            submission_link = msg.content[len({self.prefix})+len(args[0]):].strip()
             if submission_link.startswith('<') and submission_link.endswith('>'):
                 submission_link = submission_link[1:-1]
             if (len(args) < 2) or (not _uri_validate(submission_link)):
@@ -86,14 +86,27 @@ class DiscordSHContestBot:
             self._check_in_submission(msg.author, submission_link)
             await msg.channel.send(f'Submitted <{submission_link}> successfully.')
 
+        elif args[0] == 'unsubmit':
+            for i in range(len(self._submissions)):
+                if self._submissions[i]['author'] != msg.author:
+                    continue
+                del self._submissions[i]
+                self._write_submissions_file()
+                msg.channel.send('Your submission was removed successfully')
+                return
+            msg.channel.send('You have not submitted anything')
+
         elif args[0] == 'submissions':
             if len(self._submissions) == 0:
                 await msg.channel.send('**No submissions were made so far**')
                 return
             text = '\n'.join([f'- `@{i["author"].name}`:  <{i["link"]}>' for i in self._submissions])
             await msg.channel.send('**Submissions:**\n'+text)
+
         elif args[0] == 'help':
-            await msg.channel.send(f'`{self.prefix}submit <link>` - make/remake a submission\n`{self.prefix}submissions` - view all submissions made so far')
+            await msg.channel.send(f'`{self.prefix}submit <link>` - make/remake a submission\n'
+                                   f'`{self.prefix}unsubmit` - remove your submission\n'
+                                   f'`{self.prefix}submissions` - view all submissions made so far')
 
     def _log(self, *args):
         if callable(self.log_func):
