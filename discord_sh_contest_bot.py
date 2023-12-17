@@ -93,7 +93,7 @@ class DiscordSHContestBot:
             text = '\n'.join([f'- `@{i["author"].name}`:  <{i["link"]}>' for i in self._submissions])
             await msg.channel.send('**Submissions:**\n'+text)
         elif args[0] == 'help':
-            await msg.channel.send(f'`{self.prefix}submit <link>` - make/remake a submission\n`{self.prefix}` - view all submissions made so far')
+            await msg.channel.send(f'`{self.prefix}submit <link>` - make/remake a submission\n`{self.prefix}submissions` - view all submissions made so far')
 
     def _log(self, *args):
         if callable(self.log_func):
