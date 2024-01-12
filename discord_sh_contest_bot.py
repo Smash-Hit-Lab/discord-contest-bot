@@ -26,13 +26,16 @@ class DiscordSHContestBot:
         self.prefix = prefix
         self.log_func = log_func
         self.work_guild_ids = work_guild_ids
-        self._submissions = []
+        self._submissions = None
         self._submissions_filepath = submissions_filepath
 
         @self._client.event
         async def on_ready():
             self._log(f"Logged in as {self._client.user}")
-            await self._read_submissions_file()
+            if self._submissions is None:
+                self._submissions = []
+                if self._submissions_filepath is not None:
+                    await self._read_submissions_file()
             await self._client.change_presence(activity=discord.Game("!help"))
 
         @self._client.event
